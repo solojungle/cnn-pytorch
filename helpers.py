@@ -1,6 +1,7 @@
 import torch
 import torch.nn as nn
 import torch.optim as optim
+from tqdm import tqdm
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
@@ -12,11 +13,14 @@ def train(model, dataloader, epochs, learningRate=0.001, momentumRate=0.9):
     print("Beginning training...")
     for e in range(epochs):
 
+        print("Epoch: ", e + 1)
+
         losses = []
         accuracies = []
 
         model.train()
-        for imgs, labels in dataloader:
+        stream = tqdm(dataloader)
+        for i, (imgs, labels) in enumerate(stream, start=1):
             # data to cuda
             imgs = imgs.to(device)
             labels = labels.to(device)
